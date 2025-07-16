@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-export const baseURL = 'https://orange-casino.digitalOcean.com/api'
-
 const api = axios.create({
-  baseURL,
+  baseURL: import.meta.env.VITE_API_URL,
   withCredentials: true,
 });
 
