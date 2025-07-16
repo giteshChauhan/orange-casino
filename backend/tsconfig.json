@@ -1,11 +1,21 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "commonjs",
+    "module": "CommonJS",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",               // allow files anywhere under project
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "src/**/*.ts"                 // only compile your source
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "jest.config.ts",             // skip this file
+    "**/*.test.ts",               // skip tests
+    "**/__tests__/**"
+  ]
 }
