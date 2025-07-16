@@ -1,12 +1,11 @@
-import redis, { connectRedis } from '../utils/redis';
+import redis from '../utils/redis';
 import { Transaction } from '../models/transaction.model';
 import { User } from '../models/user.model';
 
 export const getLeaderboard = async (days: number) => {
-  await connectRedis();
   const cacheKey = `leaderboard:${days}`;
-  const cached = await redis.get(cacheKey);
-  if (cached) return JSON.parse(cached);
+  const cached = await redis.get<typeof result>(cacheKey);
+  if (cached) return cached;
 
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const agg = await Transaction.aggregate([
@@ -23,6 +22,7 @@ export const getLeaderboard = async (days: number) => {
     })
   );
 
-  await redis.setEx(cacheKey, 120, JSON.stringify(result));
+  await redis.set(cacheKey, result, { ex: 120 });
+
   return result;
 };
