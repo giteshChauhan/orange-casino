@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import { App } from './App';
+import app from './app';
 import './assets/global.css'
 
 ReactDOM
@@ -9,7 +9,7 @@ ReactDOM
   .render(
     <React.StrictMode>
       <BrowserRouter>
-        <App />
+        {app()}
       </BrowserRouter>
     </React.StrictMode>
   );
