@@ -4,7 +4,9 @@
   "description": "Slot game app to bet real money.",
   "main": "dist/server.js",
   "scripts": {
-    "build": "tsc",
+    "build:frontend": "cd ../frontend && npm ci && npm run build && rm -rf ../public/* && cp -r dist/* ../public/",
+    "build:backend": "tsc",
+    "build": "npm run build:frontend && npm run build:backend",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "test": "jest --detectOpenHandles --forceExit"
