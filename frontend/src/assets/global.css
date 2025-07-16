@@ -1,3 +1,60 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins');
+@import "tailwindcss";
+
+:root {
+  --background: #171717 ;
+  --foreground: #ffffff;
+}
+
+@layer base{
+  html{
+    font-family: 'Poppins', sans-serif;
+  }
+   .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+    @keyframes reel {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+  .animate-reel {
+    animation-name: reel;
+  }
+}
+
+@layer utilities {
+  .rotate-30 { transform: rotate(30deg); }
+  .rotate-0  { transform: rotate(0deg); }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
