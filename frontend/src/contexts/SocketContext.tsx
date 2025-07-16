@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { AuthContext } from './AuthContext';
 import parseJwt, { JWTPayload } from '../utils/jwtDecode';
+import { baseURL } from '../services/api';
 
 export const SocketContext = createContext<Socket | null>(null);
 
@@ -17,7 +18,7 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   useEffect(() => {
     if (!token) return;
     const { id: userId } = parseJwt<JWTPayload>(token);
-    const s = io(import.meta.env.VITE_API_URL!.replace('/api', ''), {
+    const s = io(baseURL!.replace('/api', ''), {
       auth: { token }
     });
     s.on('connect', () => {
