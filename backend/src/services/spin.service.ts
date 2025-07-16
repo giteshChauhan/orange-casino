@@ -2,6 +2,7 @@ import { Transaction } from '../models/transaction.model';
 import { User } from '../models/user.model';
 import { recordTournamentScore } from './tournament.service';
 import { symbolConfig } from '../config/slot.config';
+import { Server } from 'socket.io';
 
 // Extract symbols, weights, and payout map from config
 const symbols = symbolConfig.map(c => c.symbol);
@@ -25,7 +26,7 @@ export const spinReels = (): string[] => (
 );
 
 // Handle a spin: free spins, wagers, payouts based on matches
-export const playSpin = async (userId: string, wager: number) => {
+export const playSpin = async (userId: string, wager: number, io: Server) => {
   const user = await User.findById(userId);
   if (!user) throw new Error('User not found');
 
@@ -38,6 +39,8 @@ export const playSpin = async (userId: string, wager: number) => {
     user.freeSpins += 1;
   }
 
+  io.to(userId).emit('spin', { message: isFree ? "Free Spin" : "Paid Spin" })
+
   // Deduct paid wager
   if (!isFree) {
     if (user.balance < wager) throw new Error('Insufficient balance');
@@ -45,14 +48,19 @@ export const playSpin = async (userId: string, wager: number) => {
   }
 
   const result = spinReels();
+  io.to(userId).emit('spin', { message: "Reels Spinning" })
+
   const [a, b, c] = result;
   let payout = 0;
 
   if (a === b && b === c) {
     payout = wager * (payoutMap[a] || 1);
+    io.to(userId).emit('spin', { message: "Complete Match" })
   } else if (a === b || a === c || b === c) {
+    io.to(userId).emit('spin', { message: "Partial Match" })
     payout = wager * 2; // simple partial match
   }
+  else io.to(userId).emit('spin', { message: "No Match" })
 
   user.balance += payout;
   await user.save();
